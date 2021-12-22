@@ -1,4 +1,32 @@
 import json
+import random
+
+
+def pokemon_stats(text):
+    id = random.randint(1,801)
+    id_str = str(id)
+    if id / 100 < 1:
+        id_str = '0' + id_str
+    if id / 10 < 1:
+        id_str = '0' + id_str
+    similar_total_stats_id = 0
+    stats_total_difference = 10000
+    print('Сгенерированный id покемона -', id_str)
+    print('Имя покемона:', text[id-1]['name'], 'Вид покемона -', text[id-1]['species'])
+    print('Статистики ', text[id-1]['name'],':', text[id-1]['stats'])
+    for pokemon_info in text:
+        if (pokemon_info['species'] == text[id-1]['species']) and (pokemon_info['id'] != id_str):
+            # print(pokemon_info, id)  # вывод других покемонов того же вида для проверки
+            if abs(int(pokemon_info['stats']['total'])-int(text[id-1]['stats']['total'])) < stats_total_difference:
+                stats_total_difference = abs(int(pokemon_info['stats']['total'])-int(text[id-1]['stats']['total']))
+                similar_total_stats_id = int(pokemon_info['id'])
+    if stats_total_difference != 10000:
+        print('Покемон, с наиболее близкой суммой статов -', text[similar_total_stats_id-1]['name'])
+        # print(text[similar_total_stats_id-1])  # полный вывод инфы о покемоне из списка тоже для проверки
+    else:
+        print('Нет других покемонов этого вида')
+
+
 
 with open('pokemon_full.json') as file:
     text = json.load(file)
@@ -17,8 +45,8 @@ print('Общее количесто символов без пробелов и
 max_description = 0
 max_ability = 0
 word_count = 0
-pokemon_name = '' # Имя покемона с самым длинным описанием
-ability_list = list() # Список умений покемонов с наибольшим названием
+pokemon_name = ''  # Имя покемона с самым длинным описанием
+ability_list = list()  # Список умений покемонов с наибольшим названием
 for pokemon_info in text:
     description = pokemon_info['description']
     if len(description) > max_description:
@@ -38,3 +66,7 @@ print('Имя покемона с самым длинным описанием -
 print('Названия умений с наибольшим количеством слов:')
 for ability in ability_list:
     print(ability)
+
+print('----------------------')
+
+pokemon_stats(text)
