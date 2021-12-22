@@ -27,7 +27,6 @@ def pokemon_stats(text):
         print('Нет других покемонов этого вида')
 
 
-
 with open('pokemon_full.json') as file:
     text = json.load(file)
 file.close()
