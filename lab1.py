@@ -4,21 +4,19 @@ import random
 
 def pokemon_stats(text):
     id = random.randint(1,801)
-    id_str = str(id)
-    if id / 100 < 1:
-        id_str = '0' + id_str
-    if id / 10 < 1:
-        id_str = '0' + id_str
+    id_str = f'{id:03d}'
     similar_total_stats_id = 0
     stats_total_difference = 10000
+    pokemon = text[id-1]
     print('Сгенерированный id покемона -', id_str)
-    print('Имя покемона:', text[id-1]['name'], 'Вид покемона -', text[id-1]['species'])
-    print('Статистики ', text[id-1]['name'],':', text[id-1]['stats'])
+    print('Имя покемона:', pokemon['name'], 'Вид покемона -', pokemon['species'])
+    print('Статистики ', pokemon['name'],':', pokemon['stats'])
     for pokemon_info in text:
-        if (pokemon_info['species'] == text[id-1]['species']) and (pokemon_info['id'] != id_str):
+        if (pokemon_info['species'] == pokemon['species']) and (pokemon_info['id'] != id_str):
             # print(pokemon_info, id)  # вывод других покемонов того же вида для проверки
-            if abs(int(pokemon_info['stats']['total'])-int(text[id-1]['stats']['total'])) < stats_total_difference:
-                stats_total_difference = abs(int(pokemon_info['stats']['total'])-int(text[id-1]['stats']['total']))
+            diff = abs(int(pokemon_info['stats']['total'])-int(pokemon['stats']['total']))
+            if diff < stats_total_difference:
+                stats_total_difference = diff
                 similar_total_stats_id = int(pokemon_info['id'])
     if stats_total_difference != 10000:
         print('Покемон, с наиболее близкой суммой статов -', text[similar_total_stats_id-1]['name'])
